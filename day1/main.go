@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
+
+	"github.com/tbrisbout/adventofcode2022/pkg"
 )
 
 func countCalories(input string) int {
@@ -12,16 +13,10 @@ func countCalories(input string) int {
 	most := 0
 	for _, bag := range elfBags {
 		ingredients := strings.Split(bag, "\n")
-		sum := 0
 
-		for _, ingredient := range ingredients {
-			calories, _ := strconv.Atoi(ingredient)
-			sum += calories
-		}
+		sum := pkg.Sum(pkg.Map(ingredients, pkg.MustAtoi))
 
-		if sum > most {
-			most = sum
-		}
+		most = pkg.Max(sum, most)
 	}
 
 	return most
