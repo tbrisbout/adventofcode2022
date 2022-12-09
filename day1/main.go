@@ -2,26 +2,28 @@ package main
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/tbrisbout/adventofcode2022/pkg"
 )
 
-func countCalories(input string) int {
-	elfBags := strings.Split(input, "\n\n")
+func countNTopHolders(input string, n int) int {
+	chunks := strings.Split(input, "\n\n")
 
-	most := 0
-	for _, bag := range elfBags {
-		ingredients := strings.Split(bag, "\n")
-
-		sum := pkg.Sum(pkg.Map(ingredients, pkg.MustAtoi))
-
-		most = pkg.Max(sum, most)
+	l := []int{}
+	for _, chunk := range chunks {
+		lines := strings.Split(chunk, "\n")
+		sum := pkg.Sum(pkg.Map(lines, pkg.MustAtoi))
+		l = append(l, sum)
 	}
 
-	return most
+	sort.Ints(l)
+
+	return pkg.Sum(pkg.TakeRight(l, n))
 }
 
 func main() {
-	fmt.Println("Part 1:", countCalories(mainInput))
+	fmt.Println("Part 1:", countNTopHolders(mainInput, 1))
+	fmt.Println("Part 2:", countNTopHolders(mainInput, 3))
 }

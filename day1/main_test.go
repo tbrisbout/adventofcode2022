@@ -1,9 +1,12 @@
 package main
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
-func TestCountCalories(t *testing.T) {
-	input := `
+func TestCountNTopHolders(t *testing.T) {
+	const input = `
 1000
 2000
 3000
@@ -19,11 +22,19 @@ func TestCountCalories(t *testing.T) {
 
 10000
 `
+	tc := []struct{ Number, Want int }{
+		{1, 24000},
+		{3, 45000},
+	}
 
-	got := countCalories(input)
-	want := 24000
+	for _, test := range tc {
+		t.Run(fmt.Sprintf("count for %d returns %d", test.Number, test.Want), func(t *testing.T) {
+			got := countNTopHolders(input, test.Number)
+			want := test.Want
 
-	if got != want {
-		t.Fatalf("expected %d but got %d", want, got)
+			if got != want {
+				t.Errorf("expected %d but got %d", want, got)
+			}
+		})
 	}
 }

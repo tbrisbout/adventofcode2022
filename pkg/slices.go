@@ -29,3 +29,7 @@ func Sum[A number](list []A) A {
 	}
 	return sum
 }
+
+func TakeRight[A any](list []A, n int) []A {
+	return list[len(list)-n:]
+}
