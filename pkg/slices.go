@@ -2,6 +2,8 @@ package pkg
 
 import (
 	"strconv"
+
+	"golang.org/x/exp/slices"
 )
 
 func MustAtoi(s string) int {
@@ -32,4 +34,46 @@ func Sum[A number](list []A) A {
 
 func TakeRight[A any](list []A, n int) []A {
 	return list[len(list)-n:]
+}
+
+// Next returns the next element as if the list is a ring
+func Next[T comparable](list []T, item T) T {
+	if len(list) == 0 {
+		// return zero value for T
+		var t T
+		return t
+	}
+
+	i := slices.Index(list, item)
+	if i == -1 || i >= len(list)-1 {
+		return list[0]
+	}
+
+	return list[i+1]
+}
+
+// IsNext checks if a is next to b as if the list is a ring
+func IsNext[T comparable](list []T, a, b T) bool {
+	return Next(list, b) == a
+}
+
+// Prev returns the previous element as if the list is a ring
+func Prev[T comparable](list []T, item T) T {
+	if len(list) == 0 {
+		// return zero value for T
+		var t T
+		return t
+	}
+
+	i := slices.Index(list, item)
+	if i <= 0 {
+		return list[len(list)-1]
+	}
+
+	return list[i-1]
+}
+
+// IsPrev checks if a is prev to b as if the list is a ring
+func IsPrev[T comparable](list []T, a, b T) bool {
+	return Prev(list, b) == a
 }
