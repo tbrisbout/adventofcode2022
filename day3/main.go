@@ -8,17 +8,33 @@ import (
 	"github.com/tbrisbout/adventofcode2022/pkg"
 )
 
-func findDuplicate(in string) rune {
-	l := len(in) / 2
-	left, right := in[:l], in[l:]
+func sumDuplicates(groups [][]string) (sum int) {
+	for _, group := range groups {
+		code, _ := findDuplicate(group)
+		sum += charCodeToPriority(code)
+	}
+	return sum
+}
 
-	for _, r := range right {
-		if strings.ContainsRune(left, r) {
-			return r
+func findDuplicate(lines []string) (rune, bool) {
+	if len(lines[0]) == 0 {
+		return 0, false
+	}
+
+	for _, r := range lines[0] {
+		found := true
+		for _, line := range lines[1:] {
+			if !strings.ContainsRune(line, r) {
+				found = false
+				break
+			}
+		}
+		if found {
+			return r, true
 		}
 	}
 
-	return '0'
+	return 0, false
 }
 
 func charCodeToPriority(r rune) (p int) {
@@ -33,31 +49,24 @@ func charCodeToPriority(r rune) (p int) {
 	return p
 }
 
-func sumDuplicates(input string) (sum int) {
-	for _, r := range strings.Fields(input) {
-		code := findDuplicate(r)
-		sum += charCodeToPriority(code)
+func splitByHalf(input string) (ret [][]string) {
+	for _, line := range strings.Fields(input) {
+		ret = append(ret, half(line))
 	}
 
-	return sum
+	return ret
 }
 
-func sumDuplicatesInGroups(input string) (sum int) {
-	groups := pkg.ChunkBy(strings.Fields(input), 3)
+func half(in string) []string {
+	l := len(in) / 2
+	return []string{in[:l], in[l:]}
+}
 
-	for _, g := range groups {
-		for _, r := range g[2] {
-			if strings.ContainsRune(g[0], r) && strings.ContainsRune(g[1], r) {
-				sum += charCodeToPriority(r)
-				break
-			}
-		}
-	}
-
-	return sum
+func splitByChunk(input string) [][]string {
+	return pkg.ChunkBy(strings.Fields(input), 3)
 }
 
 func main() {
-	fmt.Println("Part1:", sumDuplicates(mainInput))
-	fmt.Println("Part2:", sumDuplicatesInGroups(mainInput))
+	fmt.Println("Part1:", sumDuplicates(splitByHalf(mainInput)))
+	fmt.Println("Part2:", sumDuplicates(splitByChunk(mainInput)))
 }
