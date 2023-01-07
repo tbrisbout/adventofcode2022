@@ -36,6 +36,14 @@ func TakeRight[A any](list []A, n int) []A {
 	return list[len(list)-n:]
 }
 
+// from stack overflow
+func ChunkBy[T any](items []T, chunkSize int) (chunks [][]T) {
+	for chunkSize < len(items) {
+		items, chunks = items[chunkSize:], append(chunks, items[0:chunkSize:chunkSize])
+	}
+	return append(chunks, items)
+}
+
 // Next returns the next element as if the list is a ring
 func Next[T comparable](list []T, item T) T {
 	if len(list) == 0 {
