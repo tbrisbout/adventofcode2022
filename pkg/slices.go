@@ -11,8 +11,7 @@ func MustAtoi(s string) int {
 	return a
 }
 
-func Map[A, B any](list []A, f func(a A) B) []B {
-	ret := make([]B, len(list))
+func Map[A, B any](list []A, f func(a A) B) (ret []B) {
 	for _, n := range list {
 		ret = append(ret, f(n))
 	}
